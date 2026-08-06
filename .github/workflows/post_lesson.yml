@@ -1,0 +1,108 @@
+name: Ingliz tili postini Telegramga yuborish
+
+on:
+  schedule:
+    # Barcha vaqtlar UTC bo'yicha. Toshkent = UTC+5 (DST yo'q).
+
+    # LISTENING TIPS - kuniga 2 marta: 09:00 va 17:00 Toshkent vaqti
+    # (= 04:00 va 12:00 UTC).
+    - cron: '0 4 * * *'
+    - cron: '0 12 * * *'
+
+    # READING TIPS - kuniga 2 marta: 11:00 va 19:00 Toshkent vaqti
+    # (= 06:00 va 14:00 UTC).
+    - cron: '0 6 * * *'
+    - cron: '0 14 * * *'
+
+    # SPEAKING TIPS - kuniga 2 marta: 13:00 va 21:00 Toshkent vaqti
+    # (= 08:00 va 16:00 UTC).
+    - cron: '0 8 * * *'
+    - cron: '0 16 * * *'
+
+    # "BILASIZMI?" (fun_fact) - kuniga 1 marta: 10:00 Toshkent vaqti
+    # (= 05:00 UTC).
+    - cron: '0 5 * * *'
+
+    # SPEAKING PART 1 mashqi (speaking_part1) - kuniga 1 marta: 12:05
+    # Toshkent vaqti (= 07:05 UTC).
+    - cron: '5 7 * * *'
+  workflow_dispatch:
+    inputs:
+      category:
+        description: "Majburiy turkum (bo'sh qoldirsangiz listening_tips deb olinadi)"
+        required: false
+        type: choice
+        options:
+          - ''
+          - listening_tips
+          - reading_tips
+          - speaking_tips
+          - fun_fact
+          - speaking_part1
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo'ni yuklab olish
+        uses: actions/checkout@v4
+
+      - name: Python o'rnatish
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Kutubxonalarni o'rnatish
+        run: pip install -r requirements.txt
+
+      - name: ffmpeg mavjudligini tekshirish (Speaking Part 1 audiosi uchun)
+        run: |
+          if ! which ffmpeg > /dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+
+      - name: Turkumni cron vaqtiga qarab aniqlash
+        id: category
+        run: |
+          case "${{ github.event.schedule }}" in
+            "0 4 * * *"|"0 12 * * *")
+              echo "value=listening_tips" >> "$GITHUB_OUTPUT" ;;
+            "0 6 * * *"|"0 14 * * *")
+              echo "value=reading_tips" >> "$GITHUB_OUTPUT" ;;
+            "0 8 * * *"|"0 16 * * *")
+              echo "value=speaking_tips" >> "$GITHUB_OUTPUT" ;;
+            "0 5 * * *")
+              echo "value=fun_fact" >> "$GITHUB_OUTPUT" ;;
+            "5 7 * * *")
+              echo "value=speaking_part1" >> "$GITHUB_OUTPUT" ;;
+            *)
+              # Qo'lda ishga tushirilgan run (workflow_dispatch) - agar
+              # turkum tanlangan bo'lsa o'shani, aks holda "listening_tips".
+              cat="${{ github.event.inputs.category }}"
+              echo "value=${cat:-listening_tips}" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Postni generatsiya qilib yuborish
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
+          POST_CATEGORY: ${{ steps.category.outputs.value }}
+        run: python post_lesson.py
+
+      - name: Ishlatilgan mavzular ro'yxatini saqlash (used_topics.json)
+        run: |
+          if [ -n "$(git status --porcelain used_topics.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add used_topics.json
+            git commit -m "chore: update used_topics.json [skip ci]"
+            git push
+          else
+            echo "used_topics.json o'zgarmadi, commit qilinmadi."
+          fi

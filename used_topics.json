@@ -24,7 +24,8 @@
       "Summary Completion turidagi savollarga strategiya",
       "True / False / Not Given savollariga strategiya",
       "Kundalik o'qish odati orqali so'z boyligini oshirish",
-      "Noma'lum so'zlarni kontekstdan taxmin qilish"
+      "Noma'lum so'zlarni kontekstdan taxmin qilish",
+      "Sentence Completion turidagi savollarga strategiya"
     ]
   }
 }

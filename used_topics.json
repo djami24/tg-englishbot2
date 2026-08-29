@@ -31,7 +31,8 @@
       "True / False / Not Given savollariga strategiya",
       "Noma'lum so'zlarni kontekstdan taxmin qilish",
       "Sentence Completion turidagi savollarga strategiya",
-      "Matching Headings turidagi savollar strategiyasi"
+      "Matching Headings turidagi savollar strategiyasi",
+      "Summary Completion turidagi savollarga strategiya"
     ]
   }
 }

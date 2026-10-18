@@ -5,7 +5,8 @@
       "Turli ingliz aksentlarini (British, Australian, American) tushunish",
       "Audio matndagi sinonim so'zlarni savol bilan bog'lash",
       "Kalit so'zlarni oldindan bashorat qilish (predicting keywords)",
-      "Distractor (chalg'ituvchi) javoblarga aldanmaslik"
+      "Distractor (chalg'ituvchi) javoblarga aldanmaslik",
+      "Javoblarda imlo (spelling) xatolaridan qochish"
     ],
     "speaking_tips": [
       "Speaking Part 1'da tabiiy va ishonchli javob berish",

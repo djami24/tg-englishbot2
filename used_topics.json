@@ -6,7 +6,8 @@
       "Audio matndagi sinonim so'zlarni savol bilan bog'lash",
       "Kalit so'zlarni oldindan bashorat qilish (predicting keywords)",
       "Distractor (chalg'ituvchi) javoblarga aldanmaslik",
-      "Javoblarda imlo (spelling) xatolaridan qochish"
+      "Javoblarda imlo (spelling) xatolaridan qochish",
+      "Matching (moslashtirish) turidagi savollar strategiyasi"
     ],
     "speaking_tips": [
       "Speaking Part 1'da tabiiy va ishonchli javob berish",

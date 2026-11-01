@@ -5,7 +5,8 @@
       "Kalit so'zlarni oldindan bashorat qilish (predicting keywords)",
       "Audio matndagi sinonim so'zlarni savol bilan bog'lash",
       "Test paytida diqqatni yo'qotmaslik texnikalari",
-      "Turli ingliz aksentlarini (British, Australian, American) tushunish"
+      "Turli ingliz aksentlarini (British, Australian, American) tushunish",
+      "Distractor (chalg'ituvchi) javoblarga aldanmaslik"
     ],
     "speaking_tips": [
       "Imtihon paytida asabiylashmasdan, ishonch bilan gapirish",
